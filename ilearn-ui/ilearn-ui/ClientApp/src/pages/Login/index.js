@@ -4,12 +4,6 @@ import { Button, Link, TextField } from '@mui/material'
 const Login = () => {
   //static displayName = Login.name
 
-  // constructor(props) {
-  //   super(props)
-  //   this.state = { currentCount: 0 }
-  //   this.incrementCounter = this.incrementCounter.bind(this)
-  // }
-
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const handleSubmit = (e) => {
@@ -31,6 +25,7 @@ const Login = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+        <br />
         <TextField
           id="password"
           className="login-input"
@@ -42,6 +37,7 @@ const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
+        <br />
         <Button variant="contained" color="secondary" type="submit">
           Entrar
         </Button>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import Search from './../components/Search'
+import Search from './../../components/Search'
 
 export class SearchResults extends Component {
   static displayName = SearchResults.name
