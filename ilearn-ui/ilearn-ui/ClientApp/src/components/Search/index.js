@@ -24,7 +24,7 @@ const Search = () => {
         sx={{ mr: 1 }}
         size="small"
       />
-      <Button variant="contained" color="secondary">
+      <Button variant="contained" color="secondary" href="/results">
         Buscar
       </Button>
       <br />

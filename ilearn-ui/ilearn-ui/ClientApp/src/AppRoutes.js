@@ -4,6 +4,7 @@ import { Home } from './pages/Home'
 import { Subscribe } from './pages/Subscribe'
 import Login from './pages/Login'
 import { SearchResults } from './pages/SearchResults'
+import { TeacherDetails } from './pages/Teacher'
 
 const AppRoutes = [
   {
@@ -29,6 +30,10 @@ const AppRoutes = [
   {
     path: '/results',
     element: <SearchResults />,
+  },
+  {
+    path: '/teacher',
+    element: <TeacherDetails />,
   },
 ]
 
