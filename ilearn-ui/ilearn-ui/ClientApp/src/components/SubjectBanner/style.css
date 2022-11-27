@@ -1,0 +1,14 @@
+.subject {
+  text-align: center;
+  margin: 0 10px;
+}
+
+.subject img {
+  width: 100%;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.subject h5 {
+  padding: 10px;
+}
