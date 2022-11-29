@@ -1,8 +1,36 @@
+using ilearn_ui.domain.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors();
 builder.Services.AddControllersWithViews();
 //builder.Services.RegisterServices();
+
+var jwtSection = builder.Configuration.GetSection("JWTSettings");
+builder.Services.Configure<JWTSettings>(jwtSection);
+var appSettings = jwtSection.Get<JWTSettings>();
+var key = Encoding.ASCII.GetBytes(appSettings.SecretKey);
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+}).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 var app = builder.Build();
 
@@ -18,6 +46,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 
+app.UseCors(option => option.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
