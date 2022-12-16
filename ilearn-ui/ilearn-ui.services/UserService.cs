@@ -1,12 +1,15 @@
-﻿using ilearn_ui.domain.Dtos.Response;
+﻿using ilearn_ui.domain.Dtos;
+using ilearn_ui.domain.Dtos.Response;
 using ilearn_ui.services.Extensions;
 using ilearn_ui.services.Translators;
+using Newtonsoft.Json;
 
 namespace ilearn_ui.services
 {
     public interface IUserService
     {
-        Task<UsersResponseDto> SearchUsersAsync();
+        Task<List<UserDto>> SearchBySubjectAsync(string subject);
+        Task<List<UserDto>> SearchBySubjectAndLocationAsync(string subject, string location);
     }
     public class UserService : IUserService
     {
@@ -17,14 +20,16 @@ namespace ilearn_ui.services
             _httpClient = httpClient;
         }
 
-        public async Task<UsersResponseDto> SearchUsersAsync()
+        public async Task<List<UserDto>> SearchBySubjectAsync(string subject)
         {
 
             HttpClient client = new HttpClient();
-            var response = await client.GetAsync("https://localhost:7299/user/all");
+            var response = await client.GetAsync($"https://localhost:7299/api/user/{subject}");
             var responseBody = await response.Content.ReadAsStringAsync();
 
-            var userResponseDto = DtoExtensions.Deserialize<UsersResponse>(responseBody);
+            var users = JsonConvert.DeserializeObject<List<UserDto>>(responseBody);
+
+            //var userResponseDto = DtoExtensions.Deserialize<IEnumerable<UserDto>>(responseBody);
 
             //if (jsonObject != null)
             //    return jsonObject;
@@ -33,8 +38,22 @@ namespace ilearn_ui.services
 
             //var userResponseDto = DtoExtensions.Deserialize<UsersResponse>(responseBody);
 
-            return UserTranslator.UsersResponseToDto(userResponseDto); ;
+            return users;
 
+            //return new UsersResponseDto();
+
+        }
+
+        public async Task<List<UserDto>> SearchBySubjectAndLocationAsync(string subject, string location)
+        {
+
+            HttpClient client = new HttpClient();
+            var response = await client.GetAsync($"https://localhost:7299/api/user/{subject}/{location}");
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            var users = JsonConvert.DeserializeObject<List<UserDto>>(responseBody);
+
+            return users;
         }
     }
 }

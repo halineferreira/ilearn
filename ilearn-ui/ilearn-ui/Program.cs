@@ -1,4 +1,5 @@
 using ilearn_ui.domain.Models;
+using ilearn_ui.services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -31,6 +32,8 @@ builder.Services.AddAuthentication(x =>
         ValidateAudience = false
     };
 });
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

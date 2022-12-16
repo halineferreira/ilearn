@@ -11,6 +11,8 @@ import Javascript from './../../images/javascript.jpg'
 import Yoga from './../../images/yoga.jpg'
 import Fisica from './../../images/fisica.jpg'
 import Algoritmos from './../../images/algoritmos.jpg'
+import './style.css'
+import { Container } from '@mui/material'
 
 export class Home extends Component {
   static displayName = Home.name
@@ -52,9 +54,8 @@ export class Home extends Component {
     }
 
     return (
-      <>
+      <Container id="home">
         <Search />
-
         <Slider {...subjectSettings}>
           <SubjectBanner text="Matemática" image={Math} />
           <SubjectBanner text="Violão" image={Violao} />
@@ -66,7 +67,7 @@ export class Home extends Component {
           <SubjectBanner text="Física" image={Fisica} />
           <SubjectBanner text="Algoritmos" image={Algoritmos} />
         </Slider>
-      </>
+      </Container>
     )
   }
 }

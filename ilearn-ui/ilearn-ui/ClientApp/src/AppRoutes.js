@@ -1,8 +1,8 @@
 import { Counter } from './components/Counter'
 import { FetchData } from './components/FetchData'
 import { Home } from './pages/Home'
-import { Subscribe } from './pages/Subscribe'
-import Login from './pages/Login'
+import Signup from './pages/Signup'
+import Signin from './pages/Signin'
 import { SearchResults } from './pages/SearchResults'
 import { TeacherDetails } from './pages/Teacher'
 
@@ -12,12 +12,12 @@ const AppRoutes = [
     element: <Home />,
   },
   {
-    path: '/subscribe',
-    element: <Subscribe />,
+    path: '/signup',
+    element: <Signup />,
   },
   {
-    path: '/login',
-    element: <Login />,
+    path: '/signin',
+    element: <Signin />,
   },
   {
     path: '/counter',

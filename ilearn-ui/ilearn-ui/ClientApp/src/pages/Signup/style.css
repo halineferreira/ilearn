@@ -1,0 +1,22 @@
+#signup {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#signup #stepper {
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+#stepper circle {
+  color: #d9d9d9;
+}
+
+#stepper .Mui-completed path {
+  color: #aed6d4;
+}
+
+#stepper .Mui-active circle {
+  color: #aed6d4;
+}

@@ -1,9 +1,8 @@
-import React, { Component, useState } from 'react'
-import { Button, Link, TextField } from '@mui/material'
+import React, { useState } from 'react'
+import { Button, TextField } from '@mui/material'
+import { Link } from 'react-router-dom'
 
-const Login = () => {
-  //static displayName = Login.name
-
+const Signin = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const handleSubmit = (e) => {
@@ -12,11 +11,11 @@ const Login = () => {
   }
   return (
     <div>
-      <h1>Login</h1>
-      <form className="form" onSubmit={handleSubmit} id="Login">
+      <h1>Sign In</h1>
+      <form className="form" onSubmit={handleSubmit} id="Signin">
         <TextField
           id="email"
-          className="login-input mr-10"
+          className="signin-input mr-10"
           label="Email"
           aria-label="Email"
           variant="outlined"
@@ -28,7 +27,7 @@ const Login = () => {
         <br />
         <TextField
           id="password"
-          className="login-input"
+          className="signin-input"
           label="Senha"
           aria-label="Senha"
           variant="outlined"
@@ -44,11 +43,11 @@ const Login = () => {
       </form>
       <p>
         Não tem uma conta?{' '}
-        <Link href="/subscribe" color="primary">
+        <Link to="/signup" color="primary">
           Cadastre-se
         </Link>
       </p>
     </div>
   )
 }
-export default Login
+export default Signin

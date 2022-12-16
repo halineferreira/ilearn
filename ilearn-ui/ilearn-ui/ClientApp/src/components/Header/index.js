@@ -49,12 +49,12 @@ export class Header extends Component {
           >
             <ul className="navbar-nav flex-grow">
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/subscribe">
+                <NavLink tag={Link} className="text-dark" to="/signup">
                   Cadastre-se
                 </NavLink>
               </NavItem>
               <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/login">
+                <NavLink tag={Link} className="text-dark" to="/signin">
                   <Button variant="contained">Entrar</Button>
                 </NavLink>
               </NavItem>

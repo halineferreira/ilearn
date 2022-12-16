@@ -4,10 +4,10 @@
     {
         public string Street { get; set; }
 
-        public AddressDto(string street)
-        {
-            Street = street;
-        }
+        //public AddressDto(string street)
+        //{
+        //    Street = street;
+        //}
 
         public string Number { get; set; }
         public string City { get; set; }

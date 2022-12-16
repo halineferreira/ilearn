@@ -2,139 +2,79 @@
 using ilearn_users_api.Data.Schemas;
 using ilearn_users_api.Domain.Entities;
 using ilearn_users_api.Domain.ValueObjects;
+using Microsoft.Extensions.Hosting;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
+using static MongoDB.Driver.WriteConcern;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
+using System.Linq.Expressions;
+using AutoMapper;
 
 namespace ilearn_users_api.Data.Repositories
 {
     public class UserRepository
     {
         IMongoCollection<UserSchema> _users;
+        private readonly IMapper _mapper;
 
-        public UserRepository(MongoDB mongoDB)
+        public UserRepository(MongoDB mongoDB, IMapper mapper)
         {
             _users = mongoDB.DB.GetCollection<UserSchema>("users");
+            _mapper = mapper;
         }
 
         public void Insert(User user)
         {
-            var document = new UserSchema
-            {
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                Phone = user.Phone,
-                Address = new AddressSchema
-                {
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    City = user.Address.City,
-                    State = user.Address.State,
-                    Country = user.Address.Country,
-                    ZipCode = user.Address.ZipCode
+            
+            //var document = new UserSchema
+            //{
+            //    Name = user.Name,
+            //    Email = user.Email,
+            //    Password = user.Password,
+            //    Phone = user.Phone,
+            //    Address = new AddressSchema
+            //    {
+            //        Street = user.Address.Street,
+            //        Number = user.Address.Number,
+            //        City = user.Address.City,
+            //        State = user.Address.State,
+            //        Country = user.Address.Country,
+            //        ZipCode = user.Address.ZipCode
 
-                }
-            };
+            //    }
+            //};
 
-            _users.InsertOne(document);
+            _users.InsertOne(_mapper.Map<UserSchema>(user));
         }
 
-        public async Task<List<User>> SearchAsync()
+        public async Task<List<User>> SearchBySubjectAsync(string subject)
         {
-            //var users = new UserList();
-            var response = new List<User>();
+            Expression<Func<UserSchema, bool>> filter = u => u.Subjects.Any(s => s.Name.Contains(subject));
+            var users = _users.Find(filter).ToList();
 
-            await _users.AsQueryable().ForEachAsync(d =>
-            {
-                var u = new User(d.Id.ToString(), d.Name, d.Email, d.Phone, d.Password);
-                var a = new Address(d.Address.Street, d.Address.Number, d.Address.City, d.Address.State, d.Address.Country, d.Address.ZipCode);
-
-                u.AttributeAddress(a);
-                response.Add(u);
-            });
-
-            //users.Values = response;
-            return response;
+            return _mapper.Map<List<User>>(users);
         }
 
-        //public async Task<IEnumerable<User>> SearchAsync()
-        //{
-        //    var users = new List<User>();
-
-        //    await _users.AsQueryable().ForEachAsync(d =>
-        //    {
-        //        var u = new User(d.Id.ToString(), d.Name, d.Email, d.Phone, d.Password);
-        //        var a = new Address(d.Address.Street, d.Address.Number, d.Address.City, d.Address.State, d.Address.Country, d.Address.ZipCode);
-
-        //        u.AttributeAddress(a);
-        //        users.Add(u);
-        //    });
-        //    return users;
-        //}
-
-        public User GetById(string id)
+        public async Task<List<User>> SearchBySubjectAndLocationAsync(string subject, string location)
         {
-            var document = _users.AsQueryable().FirstOrDefault(_ => _.Id == id);
+            Expression<Func<UserSchema, bool>> filter = u => u.Subjects.Any(s => s.Name.Contains(subject)) && u.Address.City.Contains(location);
+            var users = _users.Find(filter).ToList();
 
-            if (document == null)
-                return null;
-
-            return document.ConvertToDomain();
+            return _mapper.Map<List<User>>(users);
         }
 
-        public bool FullUpdate(User user)
+        public async Task<User> SearchByIdAsync(ObjectId id)
         {
-            var document = new UserSchema
-            {
-                Id = user.Id,
-                Name = user.Name,
-                Email = user.Email,
-                Password = user.Password,
-                Phone = user.Phone,
-                Address = new AddressSchema
-                {
-                    Street = user.Address.Street,
-                    Number = user.Address.Number,
-                    City = user.Address.City,
-                    State = user.Address.State,
-                    Country = user.Address.Country,
-                    ZipCode = user.Address.ZipCode
-                }
-            };
+            Expression<Func<UserSchema, bool>> filter = x => x.Id.Equals(id);
+            UserSchema user = _users.Find(filter).FirstOrDefault();
 
-            var result = _users.ReplaceOne(_ => _.Id == document.Id, document);
-
-            return result.ModifiedCount > 0;
+            return _mapper.Map<User>(user);
         }
 
-        public bool PartialUpdate(string id, Address address)
-        {
-            var newAddress = new AddressSchema
-            {
-                Street = address.Street,
-                Number = address.Number,
-                City = address.City,
-                State = address.State,
-                Country = address.Country,
-                ZipCode = address.ZipCode
-            };
+       
 
-            var update = Builders<UserSchema>.Update.Set(_ => _.Address, newAddress);
 
-            var result = _users.UpdateOne(_ => _.Id == id, update);
-
-            return result.ModifiedCount > 0;
-        }
-
-        public IEnumerable<User> SearchTeacherByCourseName(string name)//por enquanto vai ser nome da rua
-        {
-            var availableTeachers = new List<User>();
-
-            _users.AsQueryable()
-                .Where(_ => _.Address.Street.ToLower().Contains(name.ToLower()))
-                .ToList()
-                .ForEach(d => availableTeachers.Add(d.ConvertToDomain()));
-
-            return availableTeachers;
-        }
     }
 }

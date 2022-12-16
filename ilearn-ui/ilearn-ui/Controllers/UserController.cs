@@ -14,10 +14,16 @@ namespace ilearn_ui.Controllers
             _userService = userService;
         }
 
-        [HttpGet("search")]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("{subject}")]
+        public async Task<IActionResult> SearchBySubject(string subject)
         {
-            return Ok(await _userService.SearchUsersAsync());
+            return Ok(await _userService.SearchBySubjectAsync(subject));
+        }
+
+        [HttpGet("{subject}/{location}")]
+        public async Task<IActionResult> SearchBySubject(string subject, string location)
+        {
+            return Ok(await _userService.SearchBySubjectAndLocationAsync(subject, location));
         }
     }
 }
